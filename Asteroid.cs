@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LeoTheLegion.Core;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,24 +9,32 @@ using System.Threading.Tasks;
 
 namespace Spaceship
 {
-    public class Asteroid
+    public class Asteroid : WorldSpaceEntity
     {
-        public Vector2 position = new Vector2(600, 300);
-        public int speed;
-        public int radius = 59;
+        private int _speed;
+        private int _radius = 59;
+        private Sprite _sprite;
 
         public Asteroid(int speed)
         {
-            this.speed = speed;
+            this._speed = speed;
+            this._sprite = (Sprite)Resources.Load("asteroid");
             Random random = new Random();
-            this.position = new Vector2(1380, random.Next(0,721));
+            this._position = new Vector2(1380, random.Next(0,721));
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(ref GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            position.X -= speed * dt;
+            this._position.X -= _speed * dt;
+        }
+
+        public override void Render(ref SpriteBatch _spriteBatch)
+        {
+            _spriteBatch.Draw(_sprite.GetTexture2D(),
+                    this._position - new Vector2(this._radius, this._radius),
+                    Color.White);
         }
     }
 }

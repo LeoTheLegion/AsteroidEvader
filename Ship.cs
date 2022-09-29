@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LeoTheLegion.Core;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -8,37 +10,68 @@ using System.Threading.Tasks;
 
 namespace Spaceship
 {
-    public class Ship
+    public class Ship : WorldSpaceEntity
     {
-        public static Vector2 defaultPosition = new Vector2(640, 360);
-        public Vector2 position = defaultPosition;
-        public int _speed = 180;
-        public int radius= 30;
+        private static Vector2 _defaultPosition = new Vector2(640, 360);
+        private int _speed;
+        private int _radius= 30;
+        private bool _hasControls;
 
-        public void Update(GameTime gameTime)
+        private Sprite _sprite;
+
+        public Ship(int speed) : base()
         {
+            this._position = _defaultPosition;
+            this._speed = speed;
+            this._sprite = (Sprite)Resources.Load("ship");
+            this._hasControls = false;
+        }
+
+        public override void Update(ref GameTime gameTime)
+        {
+            if (!this._hasControls) return;
+
             KeyboardState kState = Keyboard.GetState();
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (kState.IsKeyDown(Keys.Right) && position.X < 1280)
+            if (kState.IsKeyDown(Keys.Right) && this._position.X < 1280)
             {
-                position.X += _speed * dt;
+                this._position.X += _speed * dt;
             }
 
-            if (kState.IsKeyDown(Keys.Left) && position.X > 0)
+            if (kState.IsKeyDown(Keys.Left) && this._position.X > 0)
             {
-                position.X -= _speed * dt;
+                this._position.X -= _speed * dt;
             }
 
-            if (kState.IsKeyDown(Keys.Down) && position.Y < 720)
+            if (kState.IsKeyDown(Keys.Down) && this._position.Y < 720)
             {
-                position.Y += _speed * dt;
+                this._position.Y += _speed * dt;
             }
 
-            if (kState.IsKeyDown(Keys.Up) && position.Y > 0)
+            if (kState.IsKeyDown(Keys.Up) && this._position.Y > 0)
             {
-                position.Y -= _speed * dt;
+                this._position.Y -= _speed * dt;
             }
+        }
+        public override void Render(ref SpriteBatch _spriteBatch)
+        {
+            _spriteBatch.Draw(_sprite.GetTexture2D(), this._position - new Vector2(34, 50), Color.White);
+        }
+
+        public void EnableControls()
+        {
+            this._hasControls = true;
+        }
+
+        public void DisableControls()
+        {
+            this._hasControls = false;
+        }
+
+        public void ResetPosition()
+        {
+            this._position = _defaultPosition;
         }
     }
 }
