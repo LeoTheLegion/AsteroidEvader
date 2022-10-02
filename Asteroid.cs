@@ -14,13 +14,15 @@ namespace Spaceship
     {
         private int _speed;
         private CircleCollider _circleCollider;
-
+        private static Random RANDOM = new Random();
         public Asteroid(int speed)
         {
             this._speed = speed;
             this._sprite = (Sprite)Resources.Load("asteroid");
-            Random random = new Random();
-            this._position = new Vector2(1380, random.Next(0,721));
+            this._position = new Vector2(
+                Game1.WIDTH + 100,
+                RANDOM.Next(0,Game1.HEIGHT + 1)
+                );
             this._circleCollider = new CircleCollider();
         }
 
@@ -33,8 +35,10 @@ namespace Spaceship
 
         public override void Render(ref SpriteBatch _spriteBatch)
         {
-            _spriteBatch.Draw(_sprite.GetTexture2D(),
-                    this._position - new Vector2(59, 59),
+            Texture2D tex = _sprite.GetTexture2D();
+            Vector2 offset = new Vector2(tex.Width / 2, tex.Height / 2);
+            _spriteBatch.Draw(tex,
+                    this._position - offset,
                     Color.White);
         }
 

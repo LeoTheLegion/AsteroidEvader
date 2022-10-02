@@ -13,7 +13,9 @@ namespace Spaceship
 {
     public class Ship : WorldSpaceEntity, ICollide
     {
-        private static Vector2 _defaultPosition = new Vector2(640, 360);
+        private static Vector2 _defaultPosition {
+            get { return new Vector2(Game1.WIDTH/2,Game1.HEIGHT/2); }
+        }
         private int _speed;
         private bool _hasControls;
         private CircleCollider _circleCollider;
@@ -34,7 +36,7 @@ namespace Spaceship
             KeyboardState kState = Keyboard.GetState();
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (kState.IsKeyDown(Keys.Right) && this._position.X < 1280)
+            if (kState.IsKeyDown(Keys.Right) && this._position.X < Game1.WIDTH)
             {
                 this._position.X += _speed * dt;
             }
@@ -44,7 +46,7 @@ namespace Spaceship
                 this._position.X -= _speed * dt;
             }
 
-            if (kState.IsKeyDown(Keys.Down) && this._position.Y < 720)
+            if (kState.IsKeyDown(Keys.Down) && this._position.Y < Game1.HEIGHT)
             {
                 this._position.Y += _speed * dt;
             }
@@ -56,7 +58,9 @@ namespace Spaceship
         }
         public override void Render(ref SpriteBatch _spriteBatch)
         {
-            _spriteBatch.Draw(_sprite.GetTexture2D(), this._position - new Vector2(34, 50), Color.White);
+            Texture2D tex = _sprite.GetTexture2D();
+            Vector2 offset = new Vector2(tex.Width/2, tex.Height/2);
+            _spriteBatch.Draw(tex, this._position - offset, Color.White);
         }
 
         public void EnableControls()
