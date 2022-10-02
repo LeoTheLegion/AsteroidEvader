@@ -13,6 +13,8 @@ namespace Spaceship
     public class Asteroid : WorldSpaceEntity , ICollide
     {
         private int _speed;
+        private float _rotation;
+        private float _rotationRate;
         private CircleCollider _circleCollider;
         private static Random RANDOM = new Random();
         public Asteroid(int speed)
@@ -23,6 +25,11 @@ namespace Spaceship
                 Game1.WIDTH + 100,
                 RANDOM.Next(0,Game1.HEIGHT + 1)
                 );
+
+            this._rotation = RANDOM.Next(0, 360);
+            int rate = 120;
+            this._rotationRate = RANDOM.Next(-rate, rate);
+
             this._circleCollider = new CircleCollider();
         }
 
@@ -31,15 +38,24 @@ namespace Spaceship
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             this._position.X -= _speed * dt;
+            this._rotation += this._rotationRate * dt;
         }
 
         public override void Render(ref SpriteBatch _spriteBatch)
         {
             Texture2D tex = _sprite.GetTexture2D();
-            Vector2 offset = new Vector2(tex.Width / 2, tex.Height / 2);
-            _spriteBatch.Draw(tex,
-                    this._position - offset,
-                    Color.White);
+            Vector2 origin = new Vector2(tex.Width / 2, tex.Height / 2);
+
+            _spriteBatch.Draw(
+                tex,
+                this._position,
+                null,
+                Color.White,
+                MathHelper.ToRadians(this._rotation),
+                origin,
+                1,
+                SpriteEffects.None,
+                0);
         }
 
         public bool IsColliderActive()
