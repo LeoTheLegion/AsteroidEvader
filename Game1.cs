@@ -105,43 +105,10 @@ namespace Spaceship
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            /*
-
-            _spriteBatch.Draw(_spaceSprite, new Vector2(0, 0), Color.White);
-            _spriteBatch.Draw(_shipSprite, player.position - new Vector2(34,50), Color.White);
-
-            for (int i = 0; i < _gameController.asteroids.Count; i++)
-            {
-                _spriteBatch.Draw(_asteroidSprite,
-                    _gameController.asteroids[i].position - new Vector2(_gameController.asteroids[i].radius,
-                    _gameController.asteroids[i].radius),
-                    Color.White);
-            }
-
-            if(_gameController.inGame == false)
-            {
-                string menuMessage = "Press Enter to Begin";
-
-                Vector2 sizeOfText = _gameFont.MeasureString(menuMessage);
-                int halfWidth = _graphics.PreferredBackBufferWidth / 2;
-
-                _spriteBatch.DrawString(_gameFont, menuMessage, new Vector2(halfWidth, 200) - sizeOfText/2, Color.White);
-            }
-
-            _spriteBatch.DrawString(
-                _timerFont,
-                "Time: " + Math.Floor(_gameController.totalTime).ToString(),
-                new Vector2(3,3),
-                Color.White
-                );
-
-            */
 
             _entityManagementSystem.Render(ref _spriteBatch);
 
             _spriteBatch.End();
-
-
 
             base.Draw(gameTime);
         }
