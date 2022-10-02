@@ -51,6 +51,7 @@ namespace LeoTheLegion.Core
             {
                 e.Destroy();
             }
+            this._entities.Clear();
         }
     }
 }

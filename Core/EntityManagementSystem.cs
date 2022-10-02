@@ -11,20 +11,34 @@ using System.Threading.Tasks;
 
 namespace LeoTheLegion.Core
 {
-    public static class EntityManagementSystem
+    public class EntityManagementSystem
     {
-        private static List<Entity> _entities = new List<Entity>();
+        private List<Entity> _entities = new List<Entity>();
+        private static EntityManagementSystem _INSTANCE;
+
+        public delegate void OnRegister(Entity e);
+        public event OnRegister _OnRegister;
+
+        public delegate void OnUnregister(Entity e);
+        public event OnUnregister _OnUnregister;
+
+        public EntityManagementSystem()
+        {
+            _INSTANCE = this;
+        }
 
         public static void Register(Entity e)
         {
-            _entities.Add(e);
+            _INSTANCE._entities.Add(e);
+            _INSTANCE._OnRegister?.Invoke(e);
         }
         public static void Unregister(Entity e)
         {
-            _entities.Remove(e);
+            _INSTANCE._entities.Remove(e);
+            _INSTANCE._OnUnregister?.Invoke(e);
         }
 
-        public static void Update(ref GameTime _gameTime)
+        public void Update(ref GameTime _gameTime)
         {
             _entities.Sort(
                 (x, y) => x.GetSort().CompareTo(y.GetSort())
@@ -37,7 +51,7 @@ namespace LeoTheLegion.Core
             }
         }
 
-        public static void Render(ref SpriteBatch _spriteBatch)
+        public void Render(ref SpriteBatch _spriteBatch)
         {
             for (int i = 0; i < _entities.Count; i++)
             {

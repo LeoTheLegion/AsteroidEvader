@@ -8,27 +8,33 @@ using System.Threading.Tasks;
 
 namespace Spaceship.Core.Collision
 {
-    public static class CollisionManagementSystem
+    public class CollisionManagementSystem
     {
-        private static List<ICollide> _collides = new List<ICollide>();
+        private  List<ICollide> _collides = new List<ICollide>();
 
-        public static void Register(ICollide e)
+        public CollisionManagementSystem()
         {
-            _collides.Add(e);
         }
-        public static void Unregister(ICollide e)
+
+        public void Register(Entity e)
         {
-            _collides.Remove(e);
+            if(e is ICollide)
+                _collides.Add((ICollide)e);
+        }
+        public void Unregister(Entity e)
+        {
+            if (e is ICollide)
+                _collides.Remove((ICollide)e);
         }
         
-        public static void CheckForCollisions()
+        public void CheckForCollisions()
         {
             for (int i = 0; i < _collides.Count; i++)
             {
                 for (int j = 0; j < _collides.Count; j++)
                 {
                     if (i == j) continue;
-                    if (_collides[i].GetActive() == false) continue;
+                    if (_collides[i].IsColliderActive() == false) continue;
 
                     if(ResolveCollision(_collides[i], _collides[j]))
                         _collides[i].hit(_collides[j]);
@@ -36,7 +42,7 @@ namespace Spaceship.Core.Collision
             }
         }
 
-        private static bool ResolveCollision(ICollide collide1, ICollide collide2)
+        private bool ResolveCollision(ICollide collide1, ICollide collide2)
         {
             Collider col1 = collide1.GetCollider();
             Collider col2 = collide2.GetCollider();
@@ -49,7 +55,7 @@ namespace Spaceship.Core.Collision
             return false;
         }
 
-        private static bool CircleCircleCollision(CircleCollider col1, CircleCollider col2)
+        private bool CircleCircleCollision(CircleCollider col1, CircleCollider col2)
         {
             float sum = col1.radius + col2.radius;
 

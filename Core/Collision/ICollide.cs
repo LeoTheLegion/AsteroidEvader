@@ -8,7 +8,7 @@ namespace Spaceship.Core.Collision
 {
     public interface ICollide
     {
-        bool GetActive();
+        bool IsColliderActive();
         Collider GetCollider();
         void hit(ICollide collide);
     }

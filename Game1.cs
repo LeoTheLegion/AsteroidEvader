@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Spaceship.Core.Collision;
 using System;
 using System.Collections.Generic;
 
@@ -12,12 +13,11 @@ namespace Spaceship
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D _shipSprite,_asteroidSprite,_spaceSprite;
-        private SpriteFont _gameFont,_timerFont;
-
         private Controller _gameController;
 
         private static Game1 _INSTANCE;
+        private EntityManagementSystem _entityManagementSystem;
+        private CollisionManagementSystem _collisionManagementSystem;
 
         public static int WIDTH
         {
@@ -44,6 +44,12 @@ namespace Spaceship
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
+
+            _entityManagementSystem = new EntityManagementSystem();
+            _collisionManagementSystem = new CollisionManagementSystem();
+
+            _entityManagementSystem._OnRegister += _collisionManagementSystem.Register;
+            _entityManagementSystem._OnUnregister += _collisionManagementSystem.Unregister;
 
             Resources.Init(new Dictionary<string, Asset>()
             {
@@ -72,12 +78,6 @@ namespace Spaceship
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            //_shipSprite = Content.Load<Texture2D>("ship");
-            //_asteroidSprite = Content.Load<Texture2D>("asteroid");
-            //_spaceSprite = Content.Load<Texture2D>("space");
-
-            //_gameFont = Content.Load<SpriteFont>("spaceFont");
-            //_timerFont = Content.Load<SpriteFont>("timerFont");
 
             Resources.LoadContent(Content);
 
@@ -90,28 +90,9 @@ namespace Spaceship
                 Exit();
 
             // TODO: Add your update logic here
-            /*
-            if(_gameController.inGame)
-                player.Update(gameTime);
 
-            _gameController.Update(gameTime);
-
-            for (int i = 0; i < _gameController.asteroids.Count; i++)
-            {
-                _gameController.asteroids[i].Update(gameTime);
-
-                int sum = _gameController.asteroids[i].radius + player.radius;
-
-                if(Vector2.Distance(_gameController.asteroids[i].position,player.position) < sum)
-                {
-                    _gameController.inGame = false;
-                    player.position = Ship.defaultPosition;
-                    _gameController.asteroids.Clear();
-                }
-            }
-            */
-
-            EntityManagementSystem.Update(ref gameTime);
+            _entityManagementSystem.Update(ref gameTime);
+            _collisionManagementSystem.CheckForCollisions();
 
             _gameController.Update(gameTime);
 
@@ -156,7 +137,7 @@ namespace Spaceship
 
             */
 
-            EntityManagementSystem.Render(ref _spriteBatch);
+            _entityManagementSystem.Render(ref _spriteBatch);
 
             _spriteBatch.End();
 

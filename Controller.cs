@@ -17,6 +17,8 @@ namespace Spaceship
         private Ship _player;
         private Text _timerUI, _startMessageUI;
 
+        private static Controller _INSTANCE;
+
         public double timer = 2;
         public double maxTime = 2;
         public int nextSpeed = 240;
@@ -29,6 +31,7 @@ namespace Spaceship
             this._player = player;
             this._timerUI = timerUI;
             this._startMessageUI = startMessageUI;
+            _INSTANCE = this;
         }
 
         public void Update(GameTime gameTime)
@@ -76,6 +79,8 @@ namespace Spaceship
             _startMessageUI.SetPosition(new Vector2(halfWidth, 200) - sizeOfText / 2);
 
             _timerUI.SetActive(true);
+
+            _asteroids.Destroy();
         }
 
         private void ProcessGameplay(GameTime gameTime)
@@ -99,6 +104,9 @@ namespace Spaceship
             _timerUI.SetText("Time: " + Math.Floor(this.totalTime).ToString());
         }
 
-        
+        public static void GameOver()
+        {
+           _INSTANCE.OnGameover();
+        }
     }
 }

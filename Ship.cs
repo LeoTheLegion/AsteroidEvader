@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Spaceship.Core.Collision;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +11,12 @@ using System.Threading.Tasks;
 
 namespace Spaceship
 {
-    public class Ship : WorldSpaceEntity
+    public class Ship : WorldSpaceEntity, ICollide
     {
         private static Vector2 _defaultPosition = new Vector2(640, 360);
         private int _speed;
-        private int _radius= 30;
         private bool _hasControls;
-
-        private Sprite _sprite;
+        private CircleCollider _circleCollider;
 
         public Ship(int speed) : base()
         {
@@ -25,6 +24,7 @@ namespace Spaceship
             this._speed = speed;
             this._sprite = (Sprite)Resources.Load("ship");
             this._hasControls = false;
+            this._circleCollider = new CircleCollider();
         }
 
         public override void Update(ref GameTime gameTime)
@@ -72,6 +72,26 @@ namespace Spaceship
         public void ResetPosition()
         {
             this._position = _defaultPosition;
+        }
+
+        public bool IsColliderActive()
+        {
+            return this.GetActive();
+        }
+
+        public Collider GetCollider()
+        {
+            this._circleCollider.position = this._position;
+            this._circleCollider.radius = 30;
+            return this._circleCollider;
+        }
+
+        public void hit(ICollide collide)
+        {
+            if(collide is Asteroid)
+            {
+                Controller.GameOver();
+            }
         }
     }
 }
