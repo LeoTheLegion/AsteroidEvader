@@ -10,27 +10,17 @@ using System.Threading.Tasks;
 
 namespace Spaceship
 {
-    public class Asteroid : WorldSpaceEntity , ICollide
+    public class Bullet : WorldSpaceEntity , ICollide
     {
-        private int _speed;
-        private float _rotation;
-        private float _rotationRate;
+        private const int _SPEED = 180;
+        private const float _LIFESPAN = 10f;
+        private float _life;
         private CircleCollider _circleCollider;
-        private static Random RANDOM = new Random();
 
-        public Asteroid(int speed)
+        public Bullet() : base()
         {
-            this._speed = speed;
-            this._sprite = (Sprite)Resources.Load("asteroid");
-            this._position = new Vector2(
-                Game1.WIDTH + 100,
-                RANDOM.Next(0,Game1.HEIGHT + 1)
-                );
-
-            this._rotation = RANDOM.Next(0, 360);
-            int rate = 120;
-            this._rotationRate = RANDOM.Next(-rate, rate);
-
+            this._sprite = (Sprite)Resources.Load("laser");
+            this._life = _LIFESPAN;
             this._circleCollider = new CircleCollider();
         }
 
@@ -38,10 +28,12 @@ namespace Spaceship
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            this._position.X -= _speed * dt;
-            this._rotation += this._rotationRate * dt;
-        }
+            this._position.X += _SPEED * dt;
 
+            this._life -= dt;
+
+            if (this._life < 0) this.Destroy();
+        }
         public override void Render(ref SpriteBatch _spriteBatch)
         {
             Texture2D tex = _sprite.GetTexture2D();
@@ -52,7 +44,7 @@ namespace Spaceship
                 this._position,
                 null,
                 Color.White,
-                MathHelper.ToRadians(this._rotation),
+                MathHelper.ToRadians(90),
                 origin,
                 1,
                 SpriteEffects.None,
@@ -61,19 +53,23 @@ namespace Spaceship
 
         public bool IsColliderActive()
         {
-            return this.GetActive();
+            return this._active;
         }
 
         public Collider GetCollider()
         {
-            this._circleCollider.radius = 59;
+            this._circleCollider.radius = 5;
             this._circleCollider.position = this._position;
             return this._circleCollider;
         }
 
         public void hit(ICollide collide)
         {
-
+            if(collide is Asteroid)
+            {
+                Asteroid asteroid = (Asteroid)collide;
+                asteroid.Destroy();
+            }
         }
     }
 }

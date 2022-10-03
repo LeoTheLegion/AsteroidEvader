@@ -16,6 +16,8 @@ namespace LeoTheLegion.Core
         protected int sort = -1;
         protected bool _active;
 
+        public delegate void OnDestroy(Entity e);
+        public event OnDestroy _OnDestroy;
         protected Entity()
         {
             _active = true;
@@ -26,6 +28,7 @@ namespace LeoTheLegion.Core
         public abstract void Render(ref SpriteBatch _spriteBatch);
         public virtual void Destroy()
         {
+            _OnDestroy?.Invoke(this);
             EntityManagementSystem.Unregister(this);
         }
 

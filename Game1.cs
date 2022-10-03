@@ -58,6 +58,8 @@ namespace Spaceship
                 {"asteroid" , new Sprite("asteroid") },
                 {"spaceFont" , new Font("spaceFont") },
                 {"timerFont" , new Font("timerFont") },
+                {"laser" , new Sprite("laser") },
+                {"battery" , new Sprite("battery") },
             });
 
             new Decorative("space", new Vector2(0, 0)).SetSort(-1);

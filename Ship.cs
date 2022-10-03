@@ -17,7 +17,7 @@ namespace Spaceship
             get { return new Vector2(Game1.WIDTH/2,Game1.HEIGHT/2); }
         }
         private int _speed;
-        private bool _hasControls;
+        private bool _hasControls,_canShoot;
         private CircleCollider _circleCollider;
 
         public Ship(int speed) : base()
@@ -26,6 +26,7 @@ namespace Spaceship
             this._speed = speed;
             this._sprite = (Sprite)Resources.Load("ship");
             this._hasControls = false;
+            this._canShoot = true;
             this._circleCollider = new CircleCollider();
         }
 
@@ -55,12 +56,25 @@ namespace Spaceship
             {
                 this._position.Y -= _speed * dt;
             }
+
+            if (kState.IsKeyDown(Keys.Space) && _canShoot)
+            {
+                CreateBullet(this._position);
+                this._canShoot = false;
+            }
         }
         public override void Render(ref SpriteBatch _spriteBatch)
         {
             Texture2D tex = _sprite.GetTexture2D();
             Vector2 offset = new Vector2(tex.Width/2, tex.Height/2);
             _spriteBatch.Draw(tex, this._position - offset, Color.White);
+        }
+
+        public void CreateBullet(Vector2 position)
+        {
+            Bullet bullet = new Bullet();
+
+            bullet.SetPosition(position);
         }
 
         public void EnableControls()

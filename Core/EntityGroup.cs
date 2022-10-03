@@ -27,6 +27,7 @@ namespace LeoTheLegion.Core
 
         public void Add(Entity e)
         {
+            e._OnDestroy += this.Remove;
             this._entities.Add(e);
         }
 
@@ -49,6 +50,7 @@ namespace LeoTheLegion.Core
         {
             foreach (var e in this._entities)
             {
+                e._OnDestroy -= this.Remove;
                 e.Destroy();
             }
             this._entities.Clear();
