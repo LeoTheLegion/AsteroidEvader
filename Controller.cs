@@ -18,12 +18,16 @@ namespace Spaceship
         private Text _timerUI, _startMessageUI;
 
         private static Controller _INSTANCE;
+        private Random _random;
+        private const int _STARTSPEED = 240;
+        private const int _STARTTIME = 2;
+        private const double _MINTIME = 0.4;
 
-        public double timer = 2;
-        public double maxTime = 2;
-        public int nextSpeed = 240;
-        public bool inGame = false;
-        public double totalTime = 0;
+        private double timer = 2;
+        private double maxTime = _STARTTIME;
+        private int nextSpeed = _STARTSPEED;
+        private bool inGame = false;
+        private double totalTime = 0;
 
         public Controller(Ship player, Text timerUI, Text startMessageUI)
         {
@@ -31,6 +35,7 @@ namespace Spaceship
             this._player = player;
             this._timerUI = timerUI;
             this._startMessageUI = startMessageUI;
+            this._random = new Random();
             _INSTANCE = this;
         }
 
@@ -58,7 +63,7 @@ namespace Spaceship
             totalTime = 0;
             timer = 2;
             maxTime = 2;
-            nextSpeed = 240;
+            nextSpeed = _STARTSPEED;
 
             _timerUI.SetActive(true);
             _player.EnableControls();
@@ -71,7 +76,7 @@ namespace Spaceship
             inGame = false;
             _timerUI.SetActive(false);
             _player.DisableControls();
-            _player.ResetPosition();
+            _player.Reset();
 
             _startMessageUI.SetActive(true);
             Vector2 sizeOfText = _startMessageUI.MeasureString(_startMessageUI.GetText());
@@ -90,10 +95,20 @@ namespace Spaceship
 
             if (timer <= 0)
             {
-                _asteroids.Add(new Asteroid(nextSpeed).SetSort(1));
+                Entity e = null;
+
+                int x = _random.Next(0, 255);
+
+                if (x > 220)
+                    e = new Battery(_STARTSPEED).SetSort(1);
+                else
+                    e = new Asteroid(nextSpeed).SetSort(1);
+
+                _asteroids.Add(e);
+
                 timer = maxTime;
 
-                if (maxTime > 0.5)
+                if (maxTime > _MINTIME)
                     maxTime -= 0.1;
 
                 if (nextSpeed < 720)

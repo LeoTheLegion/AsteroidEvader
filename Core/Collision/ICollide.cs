@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LeoTheLegion.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,6 @@ namespace Spaceship.Core.Collision
         bool IsColliderActive();
         Collider GetCollider();
         void hit(ICollide collide);
+        Entity GetEntity();
     }
 }

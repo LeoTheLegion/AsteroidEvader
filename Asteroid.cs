@@ -15,7 +15,7 @@ namespace Spaceship
         private int _speed;
         private float _rotation;
         private float _rotationRate;
-        private CircleCollider _circleCollider;
+        protected CircleCollider _circleCollider;
         private static Random RANDOM = new Random();
 
         public Asteroid(int speed)
@@ -64,7 +64,7 @@ namespace Spaceship
             return this.GetActive();
         }
 
-        public Collider GetCollider()
+        public virtual Collider GetCollider()
         {
             this._circleCollider.radius = 59;
             this._circleCollider.position = this._position;
@@ -74,6 +74,11 @@ namespace Spaceship
         public void hit(ICollide collide)
         {
 
+        }
+
+        public Entity GetEntity()
+        {
+            return this;
         }
     }
 }

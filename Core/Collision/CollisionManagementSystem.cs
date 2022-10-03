@@ -29,15 +29,17 @@ namespace Spaceship.Core.Collision
         
         public void CheckForCollisions()
         {
-            for (int i = 0; i < _collides.Count; i++)
+            ICollide[] collides = _collides.ToArray();
+
+            for (int i = 0; i < collides.Length; i++)
             {
-                for (int j = 0; j < _collides.Count; j++)
+                for (int j = 0; j < collides.Length; j++)
                 {
                     if (i == j) continue;
-                    if (_collides[i].IsColliderActive() == false) continue;
+                    if (collides[i].IsColliderActive() == false) continue;
 
-                    if(ResolveCollision(_collides[i], _collides[j]))
-                        _collides[i].hit(_collides[j]);
+                    if(ResolveCollision(collides[i], collides[j]))
+                        collides[i].hit(collides[j]);
                 }
             }
         }

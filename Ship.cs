@@ -26,7 +26,7 @@ namespace Spaceship
             this._speed = speed;
             this._sprite = (Sprite)Resources.Load("ship");
             this._hasControls = false;
-            this._canShoot = true;
+            this._canShoot = false;
             this._circleCollider = new CircleCollider();
         }
 
@@ -87,9 +87,10 @@ namespace Spaceship
             this._hasControls = false;
         }
 
-        public void ResetPosition()
+        public void Reset()
         {
             this._position = _defaultPosition;
+            this._canShoot = false;
         }
 
         public bool IsColliderActive()
@@ -106,10 +107,21 @@ namespace Spaceship
 
         public void hit(ICollide collide)
         {
-            if(collide is Asteroid)
+            if (collide is Battery)
             {
-                Controller.GameOver();
+                this._canShoot = true;
+                collide.GetEntity().Destroy();
             }
+            else if(collide is Asteroid) 
+            { 
+                Controller.GameOver(); 
+            }
+                
+        }
+
+        public Entity GetEntity()
+        {
+            return this;
         }
     }
 }

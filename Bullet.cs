@@ -71,5 +71,10 @@ namespace Spaceship
                 asteroid.Destroy();
             }
         }
+
+        public Entity GetEntity()
+        {
+            return this;
+        }
     }
 }
